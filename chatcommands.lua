@@ -27,7 +27,7 @@ core.register_chatcommand('tp', minetest.chatcommands['teleport'])
 
 core.register_chatcommand('speed', {
 	params = "<number>",
-	privs = {fly=true},
+	privs = {teleport=true},
 	description = "Sets player speed",
 	func = function(name, param)
 		local player = minetest.env:get_player_by_name(name)
