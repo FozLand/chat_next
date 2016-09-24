@@ -25,9 +25,15 @@ core.register_chatcommand('@', minetest.chatcommands['msg'])
 -- alias for teleport
 core.register_chatcommand('tp', minetest.chatcommands['teleport'])
 
+-- Register physics Priv.
+
+minetest.register_privilege("physics", {
+	description = 'Can set their own physics values.',
+})
+
 core.register_chatcommand('speed', {
 	params = "<number>",
-	privs = {teleport=true},
+	privs = {physics=true},
 	description = "Sets player speed",
 	func = function(name, param)
 		local player = minetest.env:get_player_by_name(name)
@@ -36,6 +42,40 @@ core.register_chatcommand('speed', {
 		minetest.chat_send_player(name, 'Speed multiplier: '..param)
 	end,
 })
+
+
+-- Allow player to set Gravity Override
+
+-- Lower value means gravity is less. Higher Numbers gravity is more.
+
+core.register_chatcommand('gravity', {
+	params = '<number>',
+	privs = {physics=true},
+	description = "Sets Player Gravity.",
+	func = function(name, param)
+		local player = minetest.env:get_player_by_name(name)
+		player:set_physics_override( {
+			gravity = tonumber(param) 
+		})
+	minetest.chat_send_player(name, 'Gravity multiplier: '..param)
+	end,
+})
+		
+-- Allow player to set Jump Height.
+
+core.register_chatcommand('jump', {
+	params = '<number>',
+	privs = {physics=true},
+	description = "Sets Player Jump Height.",
+	func = function (name, param)
+		local player = minetest.env:get_player_by_name(name)
+		player:set_physics_override( {
+			jump = tonumber(param)
+		})
+	minetest.chat_send_player(name, 'Jump multiplier: '..param)
+	end, 
+})
+
 
 core.register_chatcommand( 'whois', {
 	params = "[name]",
