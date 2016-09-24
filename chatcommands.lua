@@ -218,7 +218,7 @@ core.register_chatcommand("tpn", {
 core.register_chatcommand( 'kill', {
 	params = '<name>',
 	description = 'Kill specified player',
-	privs = { server=true },
+	privs = { ban=true },
 	func = function( name, param )
 		core.log("action", name..' invoked /kill, param='..param)
 
