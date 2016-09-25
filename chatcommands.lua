@@ -27,35 +27,97 @@ minetest.register_privilege('physics', {
 })
 
 minetest.register_chatcommand('speed', {
-	params = '<number>',
-	description = 'Sets player speed multiplier.',
+	params = '<number> [player]',
+	description = 'Sets player\'s speed multiplier.',
 	privs = {physics = true},
-	func = function(name, param)
-		local player = minetest.env:get_player_by_name(name)
-		player:set_physics_override({speed = tonumber(param)})
-		minetest.chat_send_player(name, 'Speed multiplier: '..param)
+	func = function(name, params)
+		local value, p_name = params:match('^(%S+)%s+(.+)')
+		if not p_name then
+			value = params:match('^(%S+)')
+			p_name = name
+		end
+		value = tonumber(value)
+		if not value then
+			return false, 'Invalid parameters (see /help speed).'
+		elseif value < 0 then
+			return false, 'Cannot set speed below zero. Just turn around.'
+		elseif value > 4 then
+			return false, 'Cannot set speed greater than 4.'
+		end
+		local player = minetest.env:get_player_by_name(p_name)
+		if not player then
+			minetest.chat_send_player(name, p_name..' is not online!')
+			return false
+		end
+		player:set_physics_override({speed = value})
+		minetest.chat_send_player(name, 'Speed multiplier: '..tostring(value))
+		if name ~= p_name then
+			minetest.chat_send_player(p_name, 'Speed multiplier: '..tostring(value))
+		end
 	end,
 })
 
 minetest.register_chatcommand('gravity', {
 	params = '<number>',
-	description = 'Sets player gravity multiplier.',
+	description = 'Sets player\'s gravity multiplier.',
 	privs = {physics = true},
-	func = function(name, param)
-		local player = minetest.env:get_player_by_name(name)
-		player:set_physics_override({gravity = tonumber(param)})
-		minetest.chat_send_player(name, 'Gravity multiplier: '..param)
+	func = function(name, params)
+		local value, p_name = params:match('^(%S+)%s+(.+)')
+		if not p_name then
+			value = params:match('^(%S+)')
+			p_name = name
+		end
+		value = tonumber(value)
+		if not value then
+			return false, 'Invalid parameters (see /help gravity).'
+		elseif value < 0 then
+			return false, 'Anti-gravity does not exist.'
+		elseif value < 0.01 then
+			return false, 'micro-gravity is dangerous. You might jump off the planet.'
+		elseif value > 10 then
+			return false, 'Setting gravity greater than 10 will crush you.'
+		end
+		local player = minetest.env:get_player_by_name(p_name)
+		if not player then
+			minetest.chat_send_player(name, p_name..' is not online!')
+			return false
+		end
+		player:set_physics_override({gravity = value})
+		minetest.chat_send_player(name, 'Gravity multiplier: '..tostring(value))
+		if name ~= p_name then
+			minetest.chat_send_player(p_name, 'Gravity multiplier: '..tostring(value))
+		end
 	end,
 })
 
 minetest.register_chatcommand('jump', {
 	params = '<number>',
-	description = 'Sets player jump height multiplier.',
+	description = 'Sets player\'s jump height multiplier.',
 	privs = {physics = true},
-	func = function (name, param)
-		local player = minetest.env:get_player_by_name(name)
-		player:set_physics_override({jump = tonumber(param)})
-		minetest.chat_send_player(name, 'Jump multiplier: '..param)
+	func = function(name, params)
+		local value, p_name = params:match('^(%S+)%s+(.+)')
+		if not p_name then
+			value = params:match('^(%S+)')
+			p_name = name
+		end
+		value = tonumber(value)
+		if not value then
+			return false, 'Invalid parameters (see /help jump).'
+		elseif value < 0 then
+			return false, 'That is not called jumping.'
+		elseif value > 10 then
+			return false, 'Cannot set jump greater than 10.'
+		end
+		local player = minetest.env:get_player_by_name(p_name)
+		if not player then
+			minetest.chat_send_player(name, p_name..' is not online!')
+			return false
+		end
+		player:set_physics_override({jump = value})
+		minetest.chat_send_player(name, 'Jump multiplier: '..tostring(value))
+		if name ~= p_name then
+			minetest.chat_send_player(p_name, 'Jump multiplier: '..tostring(value))
+		end
 	end,
 })
 
