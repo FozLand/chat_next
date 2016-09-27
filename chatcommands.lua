@@ -236,6 +236,24 @@ minetest.register_chatcommand('tphr', {
 	func = chatnext.tphr_send
 })
 
+-- I commented this out because it needs bug checking, i cannot run this on singleplayer server. if it is bugged let me know
+--[[
+minetest.register_chatcommand('tpha', {
+	params = '<name>',
+	description = 'Requests ALL players teleport to you.',
+	privs = {judge = true}
+	func = function(name)
+		local players = minetest.get_connected_players()
+		for number, data in ipairs(players) do
+			local pname = data:get_player_name()
+			if not pname:find('Guest') then
+				func = chatnext.tpr_accept
+			end
+		end
+	end,
+})
+
+]]--
 minetest.register_chatcommand('tpy', {
 	description = 'Accepts a teleport request from another player.',
 	func = chatnext.tpr_accept
