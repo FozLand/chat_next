@@ -236,6 +236,20 @@ minetest.register_chatcommand('tphr', {
 	func = chatnext.tphr_send
 })
 
+minetest.register_chatcommand('tpha', {
+	description = 'Requests to teleport all other players to you.',
+	privs = {fly = true},
+	func = function(name)
+		local players = minetest.get_connected_players()
+		for _,player in pairs(players) do
+			local pname = player:get_player_name()
+			if name ~= pname then
+				chatnext.tphr_send(name, pname)
+			end
+		end
+	end,
+})
+
 minetest.register_chatcommand('tpy', {
 	description = 'Accepts a teleport request from another player.',
 	func = chatnext.tpr_accept
