@@ -23,7 +23,7 @@ minetest.register_chatcommand('@', minetest.chatcommands['msg'])
 minetest.register_chatcommand('tp', minetest.chatcommands['teleport'])
 
 minetest.register_privilege('physics', {
-	description = 'Can set their own physics values.',
+	description = 'Can set any players physics values.',
 })
 
 minetest.register_chatcommand('speed', {
@@ -57,6 +57,34 @@ minetest.register_chatcommand('speed', {
 	end,
 })
 
+-- Freeze
+
+minetest.register_chatcommand('freeze', {
+	params = '<player>',
+	description = 'Freezes player in place.',
+	privs = {physics = true},
+	func = function(name, param)
+		if param == '' then
+			minetest.chat_send_player(name, 'You have to choose someone to freeze!')
+			return
+		elseif param == name then
+			minetest.chat_send_player(name, name..
+				'Ok, powering on Freeze Ray... Wait, you are kidding me, right?')
+			return
+		end
+		
+		local player = minetest.get_player_by_name(param)
+	
+		if not player then
+			minetest.chat_send_player(name, player..' is not online!')
+			return false
+		end
+		player:set_physics_override({speed = 0})
+		minetest.chat_send_player(name, 'Done')
+		minetest.chat_send_player(param, 'You have been Frozen.')
+	end,
+})
+
 minetest.register_chatcommand('gravity', {
 	params = '<number>',
 	description = 'Sets player\'s gravity multiplier.',
@@ -87,6 +115,29 @@ minetest.register_chatcommand('gravity', {
 		if name ~= p_name then
 			minetest.chat_send_player(p_name, 'Gravity multiplier: '..tostring(value))
 		end
+	end,
+})
+
+-- Moonboots 
+minetest.register_chatcommand('mb', {
+	params = '<name>',
+	description = 'Give player Moon Boots',
+	privs = {physics = true},
+	func = function(name, p_name)
+		if p_name == '' or p_name == nil then
+			minetest.chat_send_player(name, 'You have to choose someone to give them to!')
+			return false
+		end
+		
+		local player = minetest.get_player_by_name(p_name)
+	
+		if not player then
+			minetest.chat_send_player(name, p_name..' is not online!')
+			return false
+		end
+		player:set_physics_override({gravity = 0.165})
+		minetest.chat_send_player(name, 'Done. You gave '..p_name..' moon boots.')
+		minetest.chat_send_player(p_name, 'You have been given Moon Boots. Use them Wisely')
 	end,
 })
 
