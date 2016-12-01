@@ -63,25 +63,20 @@ minetest.register_chatcommand('freeze', {
 	params = '<player>',
 	description = 'Freezes player in place.',
 	privs = {physics = true},
-	func = function(name, param)
-		if param == '' then
-			minetest.chat_send_player(name, 'You have to choose someone to freeze!')
-			return
-		elseif param == name then
-			minetest.chat_send_player(name, name..
-				'Ok, powering on Freeze Ray... Wait, you are kidding me, right?')
-			return
+	func = function(name, p_name)
+		if p_name == '' or p_name == nil then
+			p_name = name
 		end
-		
-		local player = minetest.get_player_by_name(param)
-	
+
+		local player = minetest.get_player_by_name(p_name)
+
 		if not player then
-			minetest.chat_send_player(name, player..' is not online!')
-			return false
+			return false, p_name..' is not online!'
 		end
 		player:set_physics_override({speed = 0})
-		minetest.chat_send_player(name, 'Done')
-		minetest.chat_send_player(param, 'You have been Frozen.')
+
+		minetest.chat_send_player(name, 'Done. You have frozen '..p_name..'.')
+		minetest.chat_send_player(p_name, 'You have been Frozen.')
 	end,
 })
 
@@ -118,26 +113,25 @@ minetest.register_chatcommand('gravity', {
 	end,
 })
 
--- Moonboots 
+-- Moonboots
 minetest.register_chatcommand('mb', {
 	params = '<name>',
 	description = 'Give player Moon Boots',
 	privs = {physics = true},
 	func = function(name, p_name)
 		if p_name == '' or p_name == nil then
-			minetest.chat_send_player(name, 'You have to choose someone to give them to!')
-			return false
+			p_name = name
 		end
-		
+
 		local player = minetest.get_player_by_name(p_name)
-	
+
 		if not player then
-			minetest.chat_send_player(name, p_name..' is not online!')
-			return false
+			return false, p_name..' is not online!'
 		end
 		player:set_physics_override({gravity = 0.165})
 		minetest.chat_send_player(name, 'Done. You gave '..p_name..' moon boots.')
-		minetest.chat_send_player(p_name, 'You have been given Moon Boots. Use them Wisely')
+		minetest.chat_send_player(p_name,
+			'You have been given Moon Boots. Use them Wisely')
 	end,
 })
 
@@ -171,6 +165,48 @@ minetest.register_chatcommand('jump', {
 		end
 	end,
 })
+
+-- Mario
+minetest.register_chatcommand('mario', {
+	params = '<player>',
+	description = 'Doubles a players jump ability.',
+	privs = {physics = true},
+	func = function(name, p_name)
+		if p_name == '' or p_name == nil then
+			p_name = name
+		end
+
+		local player = minetest.get_player_by_name(p_name)
+
+		if not player then
+			return false, p_name..' is not online!'
+		end
+		player:set_physics_override({jump = 1.7})
+		minetest.chat_send_player(name, 'Done. You have marioed '..p_name..'.')
+		minetest.chat_send_player(p_name, 'You can now jump like Mario.')
+	end,
+})
+
+minetest.register_chatcommand('normal', {
+	params = '<player>',
+	description = 'Sets a players physics overrides to normal values.',
+	privs = {physics = true},
+	func = function(name, p_name)
+		if p_name == '' or p_name == nil then
+			p_name = name
+		end
+
+		local player = minetest.get_player_by_name(p_name)
+
+		if not player then
+			return false, p_name..' is not online!'
+		end
+		player:set_physics_override({speed = 1, gravity = 1, jump = 1})
+		minetest.chat_send_player(name, 'Done. Player '..p_name..' is now normal.')
+		minetest.chat_send_player(p_name, 'You are back to normal.')
+	end,
+})
+
 
 minetest.register_chatcommand('whois', {
 	params = '[name]',
