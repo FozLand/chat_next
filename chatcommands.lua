@@ -58,6 +58,22 @@ minetest.register_chatcommand('speed', {
 })
 
 -- Freeze
+local freeze = {
+	hp_max = 1,
+	groups = {immortal = 1},
+	physical = true,
+	collide_with_objects = true,
+	weight = 5,
+	collisionbox = {-0.5, -0.5, -0.5, 0.5, 1.5, 0.5},
+	visual = "mesh",
+	mesh = "boats_boat.obj",
+	textures = {"default_diamond_block.png"},
+	is_visible = true,
+	automatic_rotate = false,
+	automatic_face_movement_dir = false
+}
+
+minetest.register_entity('chat_next:freeze', freeze)
 
 minetest.register_chatcommand('freeze', {
 	params = '<player>',
@@ -75,8 +91,16 @@ minetest.register_chatcommand('freeze', {
 		end
 		player:set_physics_override({speed = 0})
 
+		local pos = player:getpos()
+		local freeze = minetest.add_entity(pos, 'chat_next:freeze')
+		player:set_attach(freeze, "",
+			{x = 0, y = 11, z = -3}, {x = 0, y = 0, z = 0})
+
 		minetest.chat_send_player(name, 'Done. You have frozen '..p_name..'.')
 		minetest.chat_send_player(p_name, 'You have been Frozen.')
+		minetest.after(2, function()
+			player:set_detach()
+		end)
 	end,
 })
 
