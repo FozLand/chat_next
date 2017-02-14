@@ -126,20 +126,20 @@ minetest.register_chatcommand('setopt', {
 minetest.register_chatcommand('tpr', {
 	params = '<name>',
 	description = 'Requests teleport to another player.',
-	privs = {interact = true},
+	privs = {interact = true, shout = true},
 	func = chatnext.tpr_send
 })
 
 minetest.register_chatcommand('tphr', {
 	params = '<name>',
 	description = 'Requests to teleport another player to you.',
-	privs = {interact = true},
+	privs = {interact = true, shout = true},
 	func = chatnext.tphr_send
 })
 
 minetest.register_chatcommand('tpha', {
 	description = 'Requests to teleport all other players to you.',
-	privs = {fly = true},
+	privs = {interact = true, shout = true, fly = true},
 	func = function(name)
 		local players = minetest.get_connected_players()
 		for _,player in pairs(players) do
